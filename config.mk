@@ -21,10 +21,7 @@ UBUNTU_RELEASE:=precise
 UBUNTU_MAJOR:=12
 UBUNTU_MINOR:=04
 UBUNTU_RELEASE_NUMBER:=$(UBUNTU_MAJOR).$(UBUNTU_MINOR)
-UBUNTU_KERNEL_FLAVOR?=lts-trusty
-UBUNTU_NETBOOT_FLAVOR?=trusty-netboot
 UBUNTU_ARCH:=amd64
-UBUNTU_IMAGE_RELEASE:=$(UBUNTU_MAJOR)$(UBUNTU_MINOR)
 SEPARATE_IMAGES?=/boot,ext2 /,ext4
 
 # Use mock for building RPM packages, default - NO
@@ -84,35 +81,27 @@ OSTF_GERRIT_COMMIT?=none
 # download of all the packages directly from internet
 USE_MIRROR?=ext
 ifeq ($(USE_MIRROR),ext)
-YUM_REPOS?=proprietary
 MIRROR_BASE?=http://mirror.fuel-infra.org/fwm/$(PRODUCT_VERSION)
 MIRROR_CENTOS?=$(MIRROR_BASE)/centos
 MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
-MIRROR_DOCKER?=$(MIRROR_BASE)/docker
 MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
 endif
 ifeq ($(USE_MIRROR),srt)
-YUM_REPOS?=proprietary
 MIRROR_BASE?=http://osci-mirror-srt.srt.mirantis.net/fwm/$(PRODUCT_VERSION)
 MIRROR_CENTOS?=$(MIRROR_BASE)/centos
 MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
-MIRROR_DOCKER?=$(MIRROR_BASE)/docker
 MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
 endif
 ifeq ($(USE_MIRROR),msk)
-YUM_REPOS?=proprietary
 MIRROR_BASE?=http://osci-mirror-msk.msk.mirantis.net/fwm/$(PRODUCT_VERSION)
 MIRROR_CENTOS?=$(MIRROR_BASE)/centos
 MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
-MIRROR_DOCKER?=$(MIRROR_BASE)/docker
 MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
 endif
 ifeq ($(USE_MIRROR),hrk)
-YUM_REPOS?=proprietary
 MIRROR_BASE?=http://osci-mirror-kha.kha.mirantis.net/fwm/$(PRODUCT_VERSION)
 MIRROR_CENTOS?=$(MIRROR_BASE)/centos
 MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
-MIRROR_DOCKER?=$(MIRROR_BASE)/docker
 MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
 endif
 
@@ -127,29 +116,3 @@ MIRROR_UBUNTU?=http://mirrors-local-msk.msk.mirantis.net/ubuntu-$(PRODUCT_VERSIO
 # in ${UBUNTU_RELEASE}/main
 MIRROR_UBUNTU_SECURITY?=http://mirrors-local-msk.msk.mirantis.net/ubuntu-security-$(PRODUCT_VERSION)/
 MIRROR_UBUNTU_OS_BASEURL:=$(MIRROR_UBUNTU)
-MIRROR_DOCKER?=http://mirror.fuel-infra.org/fwm/$(PRODUCT_VERSION)/docker
-MIRROR_DOCKER_BASEURL:=$(MIRROR_DOCKER)
-# MIRROR_FUEL option is valid only for 'fuel' YUM_REPOS section
-# and ignored in other cases
-MIRROR_FUEL?=http://osci-obs.vm.mirantis.net:82/centos-fuel-$(PRODUCT_VERSION)-stable/centos/
-MIRROR_FUEL_UBUNTU?=http://osci-obs.vm.mirantis.net:82/ubuntu-fuel-$(PRODUCT_VERSION)-stable/reprepro
-
-# Which repositories to use for making local centos mirror.
-# Possible values you can find out from mirror/centos/yum_repos.mk file.
-# The actual name will be constracted wich prepending "yum_repo_" prefix.
-# Example: YUM_REPOS?=official epel => yum_repo_official and yum_repo_epel
-# will be used.
-YUM_REPOS?=official fuel subscr_manager
-
-# Additional CentOS repos.
-# Each repo must be comma separated tuple with repo-name and repo-path.
-# Repos must be separated by space.
-# Example: EXTRA_RPM_REPOS="lolo,http://my.cool.repo/rpm bar,ftp://repo.foo"
-EXTRA_RPM_REPOS?=
-
-# Additional Ubunutu repos.
-# Each repo must consist of an url, dist and section parts.
-# Repos must be separated by bar.
-# Example:
-# EXTRA_DEB_REPOS="http://mrr.lcl raring main|http://mirror.yandex.ru/ubuntu precise main"'
-EXTRA_DEB_REPOS?=

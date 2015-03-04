@@ -1,14 +1,11 @@
-.PHONY: all clean test help deep_clean
+.PHONY: all clean help
 
 help:
 	@echo 'Build directives (can be overrided by environment variables'
 	@echo 'or by command line parameters):'
 	@echo '  SOURCE_DIR:       $(SOURCE_DIR)'
 	@echo '  BUILD_DIR:        $(BUILD_DIR)'
-	@echo '  YUM_REPOS:        $(YUM_REPOS)'
 	@echo '  MIRROR_CENTOS:    $(MIRROR_CENTOS)'
-	@echo '  EXTRA_RPM_REPOS:  $(EXTRA_RPM_REPOS)'
-	@echo '  EXTRA_DEB_REPOS:  $(EXTRA_DEB_REPOS)'
 	@echo
 	@echo 'Available targets:'
 	@echo '  all  				 - build all packages'
