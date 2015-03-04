@@ -42,9 +42,6 @@ endif
 # Example: BUILD_OPENSTACK_PACKAGES=neutron,keystone
 BUILD_OPENSTACK_PACKAGES?=0
 
-# Do not compress javascript and css files
-NO_UI_OPTIMIZE:=0
-
 # Define a set of defaults for each OpenStack package
 # For each component defined in BUILD_OPENSTACK_PACKAGES variable, this routine will set
 # the following variables (i.e. for 'BUILD_OPENSTACK_PACKAGES=neutron'):
@@ -88,15 +85,6 @@ PYTHON_FUELCLIENT_GERRIT_COMMIT?=none
 ASTUTE_GERRIT_COMMIT?=none
 OSTF_GERRIT_COMMIT?=none
 
-LOCAL_MIRROR_CENTOS:=$(LOCAL_MIRROR)/centos
-LOCAL_MIRROR_CENTOS_OS_BASEURL:=$(LOCAL_MIRROR_CENTOS)/os/$(CENTOS_ARCH)
-LOCAL_MIRROR_UBUNTU:=$(LOCAL_MIRROR)/ubuntu
-LOCAL_MIRROR_UBUNTU_OS_BASEURL:=$(LOCAL_MIRROR_UBUNTU)
-LOCAL_MIRROR_DOCKER:=$(LOCAL_MIRROR)/docker
-LOCAL_MIRROR_DOCKER_BASEURL:=$(LOCAL_MIRROR_DOCKER)
-DIFF_MIRROR_CENTOS_BASE:=$(LOCAL_MIRROR)/centos_updates
-DIFF_MIRROR_UBUNTU_BASE:=$(LOCAL_MIRROR)/ubuntu_updates
-
 # Use download.mirantis.com mirror by default. Other possible values are
 # 'msk', 'srt', 'usa', 'hrk'.
 # Setting any other value or removing of this variable will cause
@@ -134,8 +122,6 @@ MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
 MIRROR_DOCKER?=$(MIRROR_BASE)/docker
 MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
 endif
-
-YUM_DOWNLOAD_SRC?=
 
 MIRROR_CENTOS?=http://mirrors-local-msk.msk.mirantis.net/centos-$(PRODUCT_VERSION)/$(CENTOS_RELEASE)
 MIRROR_CENTOS_KERNEL?=http://mirror.centos.org/centos-6/6.6/

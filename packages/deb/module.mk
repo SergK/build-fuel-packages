@@ -14,7 +14,7 @@ $(BUILD_DIR)/packages/deb/buildd.tar.gz: SANDBOX_DEB_PKGS:=wget bzip2 apt-utils 
 $(BUILD_DIR)/packages/deb/buildd.tar.gz: SANDBOX_UBUNTU:=$(BUILD_DIR)/packages/deb/chroot
 $(BUILD_DIR)/packages/deb/buildd.tar.gz: export SANDBOX_UBUNTU_UP:=$(SANDBOX_UBUNTU_UP)
 $(BUILD_DIR)/packages/deb/buildd.tar.gz: export SANDBOX_UBUNTU_DOWN:=$(SANDBOX_UBUNTU_DOWN)
-$(BUILD_DIR)/packages/deb/buildd.tar.gz: $(BUILD_DIR)/mirror/ubuntu/build.done
+$(BUILD_DIR)/packages/deb/buildd.tar.gz:
 	sh -c "$${SANDBOX_UBUNTU_UP}"
 	sh -c "$${SANDBOX_UBUNTU_DOWN}"
 	sudo rm -f $(SANDBOX_UBUNTU)/var/cache/apt/archives/*.deb
@@ -25,8 +25,6 @@ $(BUILD_DIR)/packages/deb/buildd.tar.gz: $(BUILD_DIR)/mirror/ubuntu/build.done
 # (eval (call build_deb,package_name))
 define build_deb
 $(BUILD_DIR)/packages/deb/repo.done: $(BUILD_DIR)/packages/deb/$1.done
-$(BUILD_DIR)/packages/deb/repo.done: $(BUILD_DIR)/packages/deb/$1-repocleanup.done
-$(BUILD_DIR)/packages/deb/$1.done: $(BUILD_DIR)/mirror/ubuntu/build.done
 $(BUILD_DIR)/packages/deb/$1.done: $(BUILD_DIR)/packages/source_$1.done
 $(BUILD_DIR)/packages/deb/$1.done: $(BUILD_DIR)/packages/deb/buildd.tar.gz
 $(BUILD_DIR)/packages/deb/$1.done: SANDBOX_UBUNTU:=$(BUILD_DIR)/packages/deb/SANDBOX/$1
@@ -58,9 +56,6 @@ endif
 	sudo sh -c "$$$${SANDBOX_UBUNTU_DOWN}"
 	$$(ACTION.TOUCH)
 
-$(BUILD_DIR)/packages/deb/$1-repocleanup.done: $(BUILD_DIR)/mirror/ubuntu/build.done
-	sudo find $(LOCAL_MIRROR_UBUNTU_OS_BASEURL)/pool/main -regex '.*$1_[^-]+-[^-]+.*' -delete
-	$$(ACTION.TOUCH)
 endef
 
 
@@ -74,7 +69,4 @@ $(BUILD_DIR)/packages/deb/repo.done:
 	sudo $(SOURCE_DIR)/regenerate_ubuntu_repo.sh $(LOCAL_MIRROR_UBUNTU_OS_BASEURL) $(UBUNTU_RELEASE)
 	$(ACTION.TOUCH)
 
-ifneq (0,$(strip $(BUILD_DEB_PACKAGES)))
 $(BUILD_DIR)/packages/deb/build.done: $(BUILD_DIR)/packages/deb/repo.done
-endif
-

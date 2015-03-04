@@ -11,10 +11,10 @@ help:
 	@echo '  EXTRA_DEB_REPOS:  $(EXTRA_DEB_REPOS)'
 	@echo
 	@echo 'Available targets:'
-	@echo '  all  - build product'
+	@echo '  all  				 - build all packages'
+	@echo '  packages-rpm  - build all rpm packages'
+	@echo '  packages-deb  - build all deb packages'
 	@echo '  clean - remove build directory and resetting .done flags'
-	@echo '  deep_clean - clean + removing $(LOCAL_MIRROR) directory'
-	@echo '  distclean - cleans deep_clean + clean-integration-test'
 	@echo
 
 
@@ -23,16 +23,10 @@ help:
 SOURCE_DIR?=$(dir $(lastword $(MAKEFILE_LIST)))
 SOURCE_DIR:=$(abspath $(SOURCE_DIR))
 
-all: iso
-
-test: test-unit test-integration
+all: packages
 
 clean:
 	sudo rm -rf $(BUILD_DIR)
-deep_clean: clean
-	sudo rm -rf $(LOCAL_MIRROR)
-
-distclean: deep_clean
 
 # Common configuration file.
 include $(SOURCE_DIR)/config.mk
