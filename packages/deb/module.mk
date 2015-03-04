@@ -37,10 +37,10 @@ $(BUILD_DIR)/packages/deb/$1.done: $(BUILD_DIR)/repos/repos.done
 	if [ ! -e "$$(SANDBOX_UBUNTU)/etc/debian_version" ]; then \
 		sudo tar xaf $(BUILD_DIR)/packages/deb/buildd.tar.gz -C $$(SANDBOX_UBUNTU); \
 	fi
-	if ! mountpoint -q $$(SANDBOX_UBUNTU)/tmp/apt; then \
-		sudo mount -o bind $(LOCAL_MIRROR_UBUNTU) $$(SANDBOX_UBUNTU)/tmp/apt; \
-		sudo mount -o remount,ro,bind $$(SANDBOX_UBUNTU)/tmp/apt; \
-	fi
+	# if ! mountpoint -q $$(SANDBOX_UBUNTU)/tmp/apt; then \
+	# 	sudo mount -o bind $(LOCAL_MIRROR_UBUNTU) $$(SANDBOX_UBUNTU)/tmp/apt; \
+	# 	sudo mount -o remount,ro,bind $$(SANDBOX_UBUNTU)/tmp/apt; \
+	# fi
 	mountpoint -q $$(SANDBOX_UBUNTU)/proc || sudo mount -t proc sandbox_ubuntu_proc $$(SANDBOX_UBUNTU)/proc
 	sudo mkdir -p $$(SANDBOX_UBUNTU)/tmp/$1
 ifeq ($1,$(filter $1,nailgun-net-check python-tasklib))
@@ -63,10 +63,6 @@ fuel_debian_packages:=fencing-agent nailgun-mcagents nailgun-net-check nailgun-a
 $(eval $(foreach pkg,$(fuel_debian_packages),$(call build_deb,$(pkg))$(NEWLINE)))
 
 $(BUILD_DIR)/packages/deb/repo.done:
-	sudo find $(BUILD_DIR)/packages/deb/packages -name '*.deb' -exec cp -u {} $(LOCAL_MIRROR_UBUNTU_OS_BASEURL)/pool/main \;
-	echo "Applying fix for upstream bug in dpkg..."
-	-sudo patch -N /usr/bin/dpkg-scanpackages < $(SOURCE_DIR)/packages/dpkg.patch
-	sudo $(SOURCE_DIR)/regenerate_ubuntu_repo.sh $(LOCAL_MIRROR_UBUNTU_OS_BASEURL) $(UBUNTU_RELEASE)
 	$(ACTION.TOUCH)
 
 $(BUILD_DIR)/packages/deb/build.done: $(BUILD_DIR)/packages/deb/repo.done

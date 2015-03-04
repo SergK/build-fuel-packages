@@ -30,13 +30,6 @@ SEPARATE_IMAGES?=/boot,ext2 /,ext4
 # Use mock for building RPM packages, default - NO
 USE_MOCK?=0
 
-# Rebuld packages locally (do not use upstream versions)
-BUILD_PACKAGES?=1
-BUILD_DEB_PACKAGES?=1
-ifeq (0,$(strip BUILD_PACKAGES))
-BUILD_DEB_PACKAGES?=0
-endif
-
 # Build OpenStack packages from external sources (do not use prepackaged versions)
 # Enter the comma-separated list of OpenStack packages to build, or '0' otherwise.
 # Example: BUILD_OPENSTACK_PACKAGES=neutron,keystone
