@@ -37,10 +37,6 @@ $(BUILD_DIR)/packages/deb/$1.done: $(BUILD_DIR)/repos/repos.done
 	if [ ! -e "$$(SANDBOX_UBUNTU)/etc/debian_version" ]; then \
 		sudo tar xaf $(BUILD_DIR)/packages/deb/buildd.tar.gz -C $$(SANDBOX_UBUNTU); \
 	fi
-	# if ! mountpoint -q $$(SANDBOX_UBUNTU)/tmp/apt; then \
-	# 	sudo mount -o bind $(LOCAL_MIRROR_UBUNTU) $$(SANDBOX_UBUNTU)/tmp/apt; \
-	# 	sudo mount -o remount,ro,bind $$(SANDBOX_UBUNTU)/tmp/apt; \
-	# fi
 	mountpoint -q $$(SANDBOX_UBUNTU)/proc || sudo mount -t proc sandbox_ubuntu_proc $$(SANDBOX_UBUNTU)/proc
 	sudo mkdir -p $$(SANDBOX_UBUNTU)/tmp/$1
 ifeq ($1,$(filter $1,nailgun-net-check python-tasklib))

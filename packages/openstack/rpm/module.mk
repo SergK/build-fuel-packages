@@ -75,9 +75,6 @@ $(BUILD_DIR)/openstack/rpm/$1.done: \
 	sudo sh -c "$$$${SANDBOX_DOWN}"
 	$$(ACTION.TOUCH)
 
-$(BUILD_DIR)/openstack/rpm/$1-repocleanup.done: $(BUILD_DIR)/mirror/build.done
-	find $(LOCAL_MIRROR_CENTOS_OS_BASEURL)/Packages -regex '.*$1-[^-]+-[^-]+.*' -delete
-	$$(ACTION.TOUCH)
 endef
 
 ifneq ($(BUILD_OPENSTACK_PACKAGES),0)
@@ -89,9 +86,6 @@ $(foreach pkg,$(subst $(comma), ,$(BUILD_OPENSTACK_PACKAGES)),$(eval $(call buil
 endif
 
 $(BUILD_DIR)/openstack/rpm/repo.done:
-	find $(BUILD_DIR)/openstack/rpm/RPMS -name '*.rpm' -exec cp -u {} $(LOCAL_MIRROR_CENTOS_OS_BASEURL)/Packages \;
-	createrepo -g $(LOCAL_MIRROR_CENTOS_OS_BASEURL)/comps.xml \
-		-o $(LOCAL_MIRROR_CENTOS_OS_BASEURL) $(LOCAL_MIRROR_CENTOS_OS_BASEURL)
 	$(ACTION.TOUCH)
 
 $(BUILD_DIR)/openstack/rpm/build.done: $(BUILD_DIR)/openstack/rpm/repo.done
