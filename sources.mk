@@ -71,13 +71,13 @@ $(eval $(call prepare_git_source,fuel-createmirror,fuel-createmirror-$(PACKAGE_V
 packages_list:=\
 astute \
 fuel-agent \
+fuel-createmirror \
 fuel-library$(PRODUCT_VERSION) \
 fuel-main \
+fuel-nailgun \
 fuel-nailgun-agent \
 fuel-ostf \
-fuel-nailgun \
-python-fuelclient \
-fuel-createmirror
+python-fuelclient
 
 .PHONY: sources
 

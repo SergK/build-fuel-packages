@@ -19,14 +19,3 @@ include $(SOURCE_DIR)/config.mk
 # Modules
 include $(SOURCE_DIR)/repos.mk
 include $(SOURCE_DIR)/sources.mk
-
-# Macroses for make
-# include $(SOURCE_DIR)/rules.mk
-
-# Sandbox macroses.
-# include $(SOURCE_DIR)/sandbox.mk
-
-
-# include $(SOURCE_DIR)/image/module.mk
-# include $(SOURCE_DIR)/mirror/module.mk
-
