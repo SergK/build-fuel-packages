@@ -9,110 +9,69 @@ TOP_DIR:=$(abspath $(TOP_DIR))
 # Working build directory
 BUILD_DIR?=$(TOP_DIR)/build
 BUILD_DIR:=$(abspath $(BUILD_DIR))
+# Path for build artifacts
+ARTS_DIR?=$(BUILD_DIR)/artifacts
+ARTS_DIR:=$(abspath $(ARTS_DIR))
+# Path for cache of downloaded packages
 
-PRODUCT_VERSION:=6.1
+PRODUCT_VERSION:=8.0
 
-CENTOS_MAJOR:=6
-CENTOS_MINOR:=5
-CENTOS_RELEASE:=$(CENTOS_MAJOR).$(CENTOS_MINOR)
-CENTOS_ARCH:=x86_64
-CENTOS_IMAGE_RELEASE:=$(CENTOS_MAJOR)$(CENTOS_MINOR)
-UBUNTU_RELEASE:=trusty
-UBUNTU_MAJOR:=14
-UBUNTU_MINOR:=04
-UBUNTU_RELEASE_NUMBER:=$(UBUNTU_MAJOR).$(UBUNTU_MINOR)
-UBUNTU_ARCH:=amd64
-SEPARATE_IMAGES?=/boot,ext2 /,ext4
+# This variable is used for naming of auxillary objects
+# related to product: repositories, mirrors etc
+PRODUCT_NAME:=mos
 
-# Use mock for building RPM packages, default - NO
-USE_MOCK?=0
+# This variable is used mostly for
+# keeping things uniform. Some files
+# contain versions as a part of their paths
+# but building process for current version differs from
+# ones for other versions which are supposed
+# to come from DEPS_DIR "as is"
+CURRENT_VERSION:=$(PRODUCT_VERSION)
 
-# Build OpenStack packages from external sources (do not use prepackaged versions)
-# Enter the comma-separated list of OpenStack packages to build, or '0' otherwise.
-# Example: BUILD_OPENSTACK_PACKAGES=neutron,keystone
-BUILD_OPENSTACK_PACKAGES?=0
+PACKAGE_VERSION=$(PRODUCT_VERSION).0
 
-# Define a set of defaults for each OpenStack package
-# For each component defined in BUILD_OPENSTACK_PACKAGES variable, this routine will set
-# the following variables (i.e. for 'BUILD_OPENSTACK_PACKAGES=neutron'):
-# NEUTRON_REPO, NEUTRON_COMMIT, NEUTRON_SPEC_REPO, NEUTRON_SPEC_COMMIT,
-# NEUTRON_GERRIT_URL, NEUTRON_GERRIT_COMMIT, NEUTRON_GERRIT_URL,
-# NEUTRON_SPEC_GERRIT_URL, NEUTRON_SPEC_GERRIT_COMMIT
-define set_vars
-    $(call uc,$(1))_REPO?=https://github.com/openstack/$(1).git
-    $(call uc,$(1))_COMMIT?=master
-    $(call uc,$(1))_SPEC_REPO?=https://review.fuel-infra.org/openstack-build/$(1)-build.git
-    $(call uc,$(1))_SPEC_COMMIT?=master
-    $(call uc,$(1))_GERRIT_URL?=https://review.openstack.org/openstack/$(1).git
-    $(call uc,$(1))_GERRIT_COMMIT?=none
-    $(call uc,$(1))_SPEC_GERRIT_URL?=https://review.fuel-infra.org/openstack-build/$(1)-build.git
-    $(call uc,$(1))_SPEC_GERRIT_COMMIT?=none
-endef
+# Path to pre-built artifacts
+DEPS_DIR_CURRENT?=$(DEPS_DIR)/$(CURRENT_VERSION)
+DEPS_DIR_CURRENT:=$(abspath $(DEPS_DIR_CURRENT))
 
 # Repos and versions
+ASTUTE_COMMIT?=master
+CREATEMIRROR_COMMIT?=master
+FUEL_AGENT_COMMIT?=master
+FUEL_MAIN?=master
+FUEL_NAILGUN_AGENT_COMMIT?=master
 FUELLIB_COMMIT?=master
 NAILGUN_COMMIT?=master
-PYTHON_FUELCLIENT_COMMIT?=master
-ASTUTE_COMMIT?=master
 OSTF_COMMIT?=master
+PYTHON_FUELCLIENT_COMMIT?=master
 
+ASTUTE_REPO?=https://github.com/stackforge/fuel-astute.git
+CREATEMIRROR_REPO?=https://github.com/stackforge/fuel-mirror.git
+FUEL_AGENT_REPO?=https://github.com/stackforge/fuel-agent.git
+FUEL_MAIN_REPO?=https://github.com/stackforge/fuel-main.git
+FUEL_NAILGUN_AGENT_REPO?=https://github.com/stackforge/fuel-nailgun-agent.git
 FUELLIB_REPO?=https://github.com/stackforge/fuel-library.git
 NAILGUN_REPO?=https://github.com/stackforge/fuel-web.git
-PYTHON_FUELCLIENT_REPO?=https://github.com/stackforge/python-fuelclient.git
-ASTUTE_REPO?=https://github.com/stackforge/fuel-astute.git
 OSTF_REPO?=https://github.com/stackforge/fuel-ostf.git
+PYTHON_FUELCLIENT_REPO?=https://github.com/stackforge/python-fuelclient.git
 
 # Gerrit URLs and commits
+ASTUTE_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-astute
+CREATEMIRROR_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-mirror
+FUEL_AGENT_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-agent
+FUEL_MAIN_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-main
+FUEL_NAILGUN_AGENT_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-nailgun-agent
 FUELLIB_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-library
 NAILGUN_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-web
-PYTHON_FUELCLIENT_GERRIT_URL?=https://review.openstack.org/stackforge/python-fuelclient
-ASTUTE_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-astute
 OSTF_GERRIT_URL?=https://review.openstack.org/stackforge/fuel-ostf
+PYTHON_FUELCLIENT_GERRIT_URL?=https://review.openstack.org/stackforge/python-fuelclient
 
-FUELLIB_GERRIT_COMMIT?=none
-NAILGUN_GERRIT_COMMIT?=none
-PYTHON_FUELCLIENT_GERRIT_COMMIT?=none
 ASTUTE_GERRIT_COMMIT?=none
+CREATEMIRROR_GERRIT_COMMIT?=none
+FUEL_AGENT_GERRIT_COMMIT?=none
+FUEL_NAILGUN_AGENT_GERRIT_COMMIT?=none
+FUELLIB_GERRIT_COMMIT?=none
+FUELMAIN_GERRIT_COMMIT?=none
+NAILGUN_GERRIT_COMMIT?=none
 OSTF_GERRIT_COMMIT?=none
-
-# Use download.mirantis.com mirror by default. Other possible values are
-# 'msk', 'srt', 'usa', 'hrk'.
-# Setting any other value or removing of this variable will cause
-# download of all the packages directly from internet
-USE_MIRROR?=ext
-ifeq ($(USE_MIRROR),ext)
-MIRROR_BASE?=http://mirror.fuel-infra.org/fwm/$(PRODUCT_VERSION)
-MIRROR_CENTOS?=$(MIRROR_BASE)/centos
-MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
-MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
-endif
-ifeq ($(USE_MIRROR),srt)
-MIRROR_BASE?=http://osci-mirror-srt.srt.mirantis.net/fwm/$(PRODUCT_VERSION)
-MIRROR_CENTOS?=$(MIRROR_BASE)/centos
-MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
-MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
-endif
-ifeq ($(USE_MIRROR),msk)
-MIRROR_BASE?=http://osci-mirror-msk.msk.mirantis.net/fwm/$(PRODUCT_VERSION)
-MIRROR_CENTOS?=$(MIRROR_BASE)/centos
-MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
-MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
-endif
-ifeq ($(USE_MIRROR),hrk)
-MIRROR_BASE?=http://osci-mirror-kha.kha.mirantis.net/fwm/$(PRODUCT_VERSION)
-MIRROR_CENTOS?=$(MIRROR_BASE)/centos
-MIRROR_UBUNTU?=$(MIRROR_BASE)/ubuntu
-MIRROR_CENTOS_KERNEL?=$(MIRROR_CENTOS)
-endif
-
-MIRROR_CENTOS?=http://mirrors-local-msk.msk.mirantis.net/centos-$(PRODUCT_VERSION)/$(CENTOS_RELEASE)
-MIRROR_CENTOS_KERNEL?=http://mirror.centos.org/centos-6/6.6/
-MIRROR_CENTOS_OS_BASEURL:=$(MIRROR_CENTOS)/os/$(CENTOS_ARCH)
-MIRROR_CENTOS_KERNEL_BASEURL?=$(MIRROR_CENTOS_KERNEL)/os/$(CENTOS_ARCH)
-MIRROR_UBUNTU?=http://mirrors-local-msk.msk.mirantis.net/ubuntu-$(PRODUCT_VERSION)/
-# Unfortunately security updates are handled in a manner incompatible with
-# Debian/Ubuntu. That is, instead of having ${UBUNTU_RELEASE}-updates
-# directory there's a different APT repo with security updates residing
-# in ${UBUNTU_RELEASE}/main
-MIRROR_UBUNTU_SECURITY?=http://mirrors-local-msk.msk.mirantis.net/ubuntu-security-$(PRODUCT_VERSION)/
-MIRROR_UBUNTU_OS_BASEURL:=$(MIRROR_UBUNTU)
+PYTHON_FUELCLIENT_GERRIT_COMMIT?=none
