@@ -9,30 +9,10 @@ TOP_DIR:=$(abspath $(TOP_DIR))
 # Working build directory
 BUILD_DIR?=$(TOP_DIR)/build
 BUILD_DIR:=$(abspath $(BUILD_DIR))
-# Path for build artifacts
-ARTS_DIR?=$(BUILD_DIR)/artifacts
-ARTS_DIR:=$(abspath $(ARTS_DIR))
-# Path for cache of downloaded packages
 
 PRODUCT_VERSION:=8.0
 
-# This variable is used for naming of auxillary objects
-# related to product: repositories, mirrors etc
-PRODUCT_NAME:=mos
-
-# This variable is used mostly for
-# keeping things uniform. Some files
-# contain versions as a part of their paths
-# but building process for current version differs from
-# ones for other versions which are supposed
-# to come from DEPS_DIR "as is"
-CURRENT_VERSION:=$(PRODUCT_VERSION)
-
 PACKAGE_VERSION=$(PRODUCT_VERSION).0
-
-# Path to pre-built artifacts
-DEPS_DIR_CURRENT?=$(DEPS_DIR)/$(CURRENT_VERSION)
-DEPS_DIR_CURRENT:=$(abspath $(DEPS_DIR_CURRENT))
 
 # Repos and versions
 ASTUTE_COMMIT?=master

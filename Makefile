@@ -1,17 +1,18 @@
 .PHONY: all clean help
 
 help:
-	@echo 'Build directives (can be overrided by environment variables'
+	@echo 'all   - prepare all packages sources'
+	@echo 'clean - clean targets'
 
 # Path to the sources.
 # Default value: directory with Makefile
 SOURCE_DIR?=$(dir $(lastword $(MAKEFILE_LIST)))
 SOURCE_DIR:=$(abspath $(SOURCE_DIR))
 
-all: all
+all: sources
 
 clean:
-	sudo rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)
 
 # Common configuration file.
 include $(SOURCE_DIR)/config.mk

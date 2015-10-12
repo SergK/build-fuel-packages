@@ -42,8 +42,6 @@ $(eval $(call build_repo,fuel-createmirror,$(CREATEMIRROR_REPO),$(CREATEMIRROR_C
 
 $(BUILD_DIR)/repos/repos.done: $(BUILD_DIR)/repos/fuel-library$(PRODUCT_VERSION).done
 
-#FIXME(aglarendil): make repos generation uniform
-
 $(BUILD_DIR)/repos/fuel-library$(PRODUCT_VERSION).done: $(BUILD_DIR)/repos/fuel-library.done
 	ln -s $(BUILD_DIR)/repos/fuel-library $(BUILD_DIR)/repos/fuel-library$(PRODUCT_VERSION)
 	$(ACTION.TOUCH)
