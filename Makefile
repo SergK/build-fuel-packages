@@ -20,3 +20,9 @@ include $(SOURCE_DIR)/config.mk
 # Modules
 include $(SOURCE_DIR)/repos.mk
 include $(SOURCE_DIR)/sources.mk
+
+# rules
+define ACTION.TOUCH
+@mkdir -p $(@D)
+touch $@
+endef
