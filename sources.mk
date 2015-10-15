@@ -22,9 +22,9 @@ $(BUILD_DIR)/packages/sources/$1/$2:
 	mkdir -p $(BUILD_DIR)/packages/sources/$1
 	cd $3 && git archive --format tar --worktree-attributes $4 > $(BUILD_DIR)/packages/sources/$1/$1.tar
 	echo VERSION=$(PACKAGE_VERSION) > $$(VERSIONFILE)
-	echo -n RELEASE=`git -C $3 rev-list --no-merges $4 --count` >> $$(VERSIONFILE)
-	echo -n ".1" >> $$(VERSIONFILE)
-	echo ".git`git -C $3 rev-parse --short $4`" >> $$(VERSIONFILE)
+	echo -n RELEASE="1.mos" >> $$(VERSIONFILE)
+	echo -n `git -C $3 rev-list --no-merges $4 --count` >> $$(VERSIONFILE)
+	echo ".git.`git -C $3 rev-parse --short $4`" >> $$(VERSIONFILE)
 	echo DEBFULLNAME=`git -C $3 log -1 --pretty=format:%an` >> $$(VERSIONFILE)
 	echo DEBEMAIL=`git -C $3 log -1 --pretty=format:%ae` >> $$(VERSIONFILE)
 	echo DEBMSG=`git -C $3 log -1 --pretty=%s` >> $$(VERSIONFILE)

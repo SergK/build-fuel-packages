@@ -41,18 +41,8 @@ $(eval $(call build_repo,fuel-ostf,$(OSTF_REPO),$(OSTF_COMMIT),$(OSTF_GERRIT_URL
 $(eval $(call build_repo,fuel-createmirror,$(CREATEMIRROR_REPO),$(CREATEMIRROR_COMMIT),$(CREATEMIRROR_GERRIT_URL),$(CREATEMIRROR_GERRIT_COMMIT)))
 
 $(BUILD_DIR)/repos/repos.done: $(BUILD_DIR)/repos/fuel-library$(PRODUCT_VERSION).done
+	$(ACTION.TOUCH)
 
 $(BUILD_DIR)/repos/fuel-library$(PRODUCT_VERSION).done: $(BUILD_DIR)/repos/fuel-library.done
 	ln -s $(BUILD_DIR)/repos/fuel-library $(BUILD_DIR)/repos/fuel-library$(PRODUCT_VERSION)
-	$(ACTION.TOUCH)
-
-$(BUILD_DIR)/repos/repos.done:
-	version_yaml=$(BUILD_DIR)/repos/version.yaml; \
-	for repo in $(strip $(fuel_components_repos)); do \
-		repo_commit_id=`git --git-dir=$(BUILD_DIR)/repos/$$repo/.git rev-parse --verify HEAD`; \
-		echo "  $${repo}_sha: \"$${repo_commit_id}\""; \
-	done > $${version_yaml}.tmp; \
-	fuelmain_commit_id=`git rev-parse --verify HEAD`; \
-	echo "  fuelmain_sha: \"$${fuelmain_commit_id}\"" >> $${version_yaml}.tmp; \
-	mv $${version_yaml}.tmp $${version_yaml}
 	$(ACTION.TOUCH)
