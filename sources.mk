@@ -7,13 +7,11 @@ clean-sources:
 # Prepare sources + version file in format:
 #
 # VERSION=$(PRODUCT_VERSION)
-# if gerrit commit is given then
-#   RELEASE=${commit_num}.0.gerrit${request_number}.${patchset_number}.git${git_sha}
-# else
-#   RELEASE=${commit_num}.1.git${git_sha}
-# DEBFULLNAME=Commit Author
-# DEBEMAIL=Commit Author email address
-# DEBMSG=Commit message
+# RELEASE=1.mos${commit_num}.git.${git_sha}
+# DEB_REALEASE=1~u14.04+mos${commit_num}+git.${git_sha}
+# AUTHOR=Commit Author
+# EMAIL=Commit Author email address
+# MSG=Commit message
 define prepare_git_source
 $(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/repos/repos.done
 $(BUILD_DIR)/packages/source_$1.done: $(BUILD_DIR)/packages/sources/$1/$2
@@ -22,12 +20,11 @@ $(BUILD_DIR)/packages/sources/$1/$2:
 	mkdir -p $(BUILD_DIR)/packages/sources/$1
 	cd $3 && git archive --format tar --worktree-attributes $4 > $(BUILD_DIR)/packages/sources/$1/$1.tar
 	echo VERSION=$(PACKAGE_VERSION) > $$(VERSIONFILE)
-	echo -n RELEASE="1.mos" >> $$(VERSIONFILE)
-	echo -n `git -C $3 rev-list --no-merges $4 --count` >> $$(VERSIONFILE)
-	echo ".git.`git -C $3 rev-parse --short $4`" >> $$(VERSIONFILE)
-	echo DEBFULLNAME=`git -C $3 log -1 --pretty=format:%an` >> $$(VERSIONFILE)
-	echo DEBEMAIL=`git -C $3 log -1 --pretty=format:%ae` >> $$(VERSIONFILE)
-	echo DEBMSG=`git -C $3 log -1 --pretty=%s` >> $$(VERSIONFILE)
+	echo RELEASE="1.mos`git -C $3 rev-list --no-merges $4 --count`.git.`git -C $3 rev-parse --short $4`" >> $$(VERSIONFILE)
+	echo DEB_RELEASE="1~u14.04+mos`git -C $3 rev-list --no-merges $4 --count`+git.`git -C $3 rev-parse --short $4`" >> $$(VERSIONFILE)
+	echo AUTHOR=`git -C $3 log -1 --pretty=format:%an` >> $$(VERSIONFILE)
+	echo EMAIL=`git -C $3 log -1 --pretty=format:%ae` >> $$(VERSIONFILE)
+	echo MSG=`git -C $3 log -1 --pretty=%s` >> $$(VERSIONFILE)
 	cd $(BUILD_DIR)/packages/sources/$1 && tar -rf $1.tar version
 	cd $(BUILD_DIR)/packages/sources/$1 && gzip -9 $1.tar && mv $1.tar.gz $2
 endef
