@@ -14,6 +14,10 @@ clean-sources:
 # MSG=Commit message
 define prepare_git_source
 
+$(BUILD_DIR)/packages/sources/$1/$1.spec: $(BUILD_DIR)/repos/repos.done
+	mkdir -p $(BUILD_DIR)/packages/sources/$1
+	cp -v $(BUILD_DIR)/repos/$1/specs/$1.spec $$(@)
+
 $(BUILD_DIR)/packages/sources/$1/version: $(BUILD_DIR)/repos/repos.done
 	mkdir -p $(BUILD_DIR)/packages/sources/$1
 	echo VERSION=$(PACKAGE_VERSION) > $$(@)
@@ -25,12 +29,15 @@ $(BUILD_DIR)/packages/sources/$1/version: $(BUILD_DIR)/repos/repos.done
 
 $(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/repos/repos.done
 $(BUILD_DIR)/packages/source_$1.done: $(BUILD_DIR)/packages/sources/$1/$2
+$(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/packages/sources/$1/$1.spec
 $(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/packages/sources/$1/version
 	cd $3 && git archive --format tar --worktree-attributes $4 > $(BUILD_DIR)/packages/sources/$1/$1.tar
 	cd $(BUILD_DIR)/packages/sources/$1 && tar -rf $1.tar version
 	cd $(BUILD_DIR)/packages/sources/$1 && gzip -9 $1.tar && mv $1.tar.gz $2
 endef
 
+$(BUILD_DIR)/packages/source_%.done:
+	$(ACTION.TOUCH)
 
 #NAILGUN_PKGS
 $(eval $(call prepare_git_source,fuel-nailgun,fuel-nailgun-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-nailgun,HEAD))
