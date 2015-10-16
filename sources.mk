@@ -13,24 +13,24 @@ clean-sources:
 # EMAIL=Commit Author email address
 # MSG=Commit message
 define prepare_git_source
+
+$(BUILD_DIR)/packages/sources/$1/version: $(BUILD_DIR)/repos/repos.done
+	mkdir -p $(BUILD_DIR)/packages/sources/$1
+	echo VERSION=$(PACKAGE_VERSION) > $$(@)
+	echo RELEASE="1.mos`git -C $3 rev-list --no-merges $4 --count`.git.`git -C $3 rev-parse --short $4`" >> $$(@)
+	echo DEB_RELEASE="1~u14.04+mos`git -C $3 rev-list --no-merges $4 --count`+git.`git -C $3 rev-parse --short $4`" >> $$(@)
+	echo AUTHOR=`git -C $3 log -1 --pretty=format:%an` >> $$(@)
+	echo EMAIL=`git -C $3 log -1 --pretty=format:%ae` >> $$(@)
+	echo MSG=`git -C $3 log -1 --pretty=%s` >> $$(@)
+
 $(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/repos/repos.done
 $(BUILD_DIR)/packages/source_$1.done: $(BUILD_DIR)/packages/sources/$1/$2
-$(BUILD_DIR)/packages/sources/$1/$2: VERSIONFILE:=$(BUILD_DIR)/packages/sources/$1/version
-$(BUILD_DIR)/packages/sources/$1/$2:
-	mkdir -p $(BUILD_DIR)/packages/sources/$1
+$(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/packages/sources/$1/version
 	cd $3 && git archive --format tar --worktree-attributes $4 > $(BUILD_DIR)/packages/sources/$1/$1.tar
-	echo VERSION=$(PACKAGE_VERSION) > $$(VERSIONFILE)
-	echo RELEASE="1.mos`git -C $3 rev-list --no-merges $4 --count`.git.`git -C $3 rev-parse --short $4`" >> $$(VERSIONFILE)
-	echo DEB_RELEASE="1~u14.04+mos`git -C $3 rev-list --no-merges $4 --count`+git.`git -C $3 rev-parse --short $4`" >> $$(VERSIONFILE)
-	echo AUTHOR=`git -C $3 log -1 --pretty=format:%an` >> $$(VERSIONFILE)
-	echo EMAIL=`git -C $3 log -1 --pretty=format:%ae` >> $$(VERSIONFILE)
-	echo MSG=`git -C $3 log -1 --pretty=%s` >> $$(VERSIONFILE)
-	cd $(BUILD_DIR)/packages/sources/$1 && tar -rf $1.tar $$(VERSIONFILE)
+	cd $(BUILD_DIR)/packages/sources/$1 && tar -rf $1.tar version
 	cd $(BUILD_DIR)/packages/sources/$1 && gzip -9 $1.tar && mv $1.tar.gz $2
 endef
 
-$(BUILD_DIR)/packages/source_%.done:
-	$(ACTION.TOUCH)
 
 #NAILGUN_PKGS
 $(eval $(call prepare_git_source,fuel-nailgun,fuel-nailgun-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-nailgun,HEAD))
