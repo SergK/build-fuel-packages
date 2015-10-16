@@ -25,7 +25,7 @@ $(BUILD_DIR)/packages/sources/$1/$2:
 	echo AUTHOR=`git -C $3 log -1 --pretty=format:%an` >> $$(VERSIONFILE)
 	echo EMAIL=`git -C $3 log -1 --pretty=format:%ae` >> $$(VERSIONFILE)
 	echo MSG=`git -C $3 log -1 --pretty=%s` >> $$(VERSIONFILE)
-	cd $(BUILD_DIR)/packages/sources/$1 && tar -rf $1.tar version
+	cd $(BUILD_DIR)/packages/sources/$1 && tar -rf $1.tar $$(VERSIONFILE)
 	cd $(BUILD_DIR)/packages/sources/$1 && gzip -9 $1.tar && mv $1.tar.gz $2
 endef
 
@@ -33,23 +33,23 @@ $(BUILD_DIR)/packages/source_%.done:
 	$(ACTION.TOUCH)
 
 #NAILGUN_PKGS
-$(eval $(call prepare_git_source,fuel-nailgun,fuel-nailgun-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-nailgun,HEAD,$(NAILGUN_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,fuel-nailgun,fuel-nailgun-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-nailgun,HEAD))
 #FUEL_OSTF_PKGS
-$(eval $(call prepare_git_source,fuel-ostf,fuel-ostf-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-ostf,HEAD,$(OSTF_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,fuel-ostf,fuel-ostf-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-ostf,HEAD))
 #ASTUTE_PKGS
-$(eval $(call prepare_git_source,astute,astute-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/astute,HEAD,$(ASTUTE_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,astute,astute-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/astute,HEAD))
 #FUELLIB_PKGS
-$(eval $(call prepare_git_source,fuel-library$(PRODUCT_VERSION),fuel-library$(PRODUCT_VERSION)-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-library$(PRODUCT_VERSION),HEAD,$(FUELLIB_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,fuel-library$(PRODUCT_VERSION),fuel-library$(PRODUCT_VERSION)-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-library$(PRODUCT_VERSION),HEAD))
 #FUEL_PYTHON_PKGS
-$(eval $(call prepare_git_source,python-fuelclient,python-fuelclient-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/python-fuelclient,HEAD,$(PYTHON_FUELCLIENT_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,python-fuelclient,python-fuelclient-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/python-fuelclient,HEAD))
 #FUEL_AGENT_PKGS
-$(eval $(call prepare_git_source,fuel-agent,fuel-agent-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-agent,HEAD,$(FUEL_AGENT_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,fuel-agent,fuel-agent-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-agent,HEAD))
 #FUEL_NAILGUN_AGENT_PKGS
-$(eval $(call prepare_git_source,fuel-nailgun-agent,fuel-nailgun-agent-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-nailgun-agent,HEAD,$(FUEL_NAILGUN_AGENT_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,fuel-nailgun-agent,fuel-nailgun-agent-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-nailgun-agent,HEAD))
 #FUEL-IMAGE PKGS
-$(eval $(call prepare_git_source,fuel-main,fuel-main-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-main,HEAD,$(FUELMAIN_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,fuel-main,fuel-main-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-main,HEAD))
 #FUEL-CREATEMIRROR PKGS
-$(eval $(call prepare_git_source,fuel-createmirror,fuel-createmirror-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-createmirror,HEAD,$(CREATEMIRROR_GERRIT_COMMIT)))
+$(eval $(call prepare_git_source,fuel-createmirror,fuel-createmirror-$(PACKAGE_VERSION).tar.gz,$(BUILD_DIR)/repos/fuel-createmirror,HEAD))
 
 
 packages_list:=\
