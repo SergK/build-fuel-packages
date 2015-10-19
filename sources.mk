@@ -14,7 +14,8 @@ clean-sources:
 # MSG=Commit message
 define prepare_git_source
 
-$(BUILD_DIR)/packages/sources/$1/$1.spec: $(BUILD_DIR)/repos/repos.done
+$(BUILD_DIR)/packages/sources/$1/$1.spec: $(BUILD_DIR)/repos/repos.done \
+		$(BUILD_DIR)/packages/sources/$1/version
 	mkdir -p $(BUILD_DIR)/packages/sources/$1
 	cp -v $(BUILD_DIR)/repos/$1/specs/$1.spec $$(@)
 
