@@ -65,6 +65,14 @@ $(eval $(call prepare_git_source,fuel-createmirror,fuel-createmirror-$(PACKAGE_V
 
 
 packages_list:=\
+astute \
+fuel-agent \
+fuel-createmirror \
+fuel-library$(PRODUCT_VERSION) \
+fuel-main \
+fuel-nailgun \
+fuel-nailgun-agent \
+fuel-ostf \
 python-fuelclient
 
 sources: $(packages_list:%=$(BUILD_DIR)/packages/source_%.done)
