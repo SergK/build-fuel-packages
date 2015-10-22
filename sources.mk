@@ -14,28 +14,32 @@ clean-sources:
 # MSG=Commit message
 define prepare_git_source
 
-RELEASE:=$(shell echo 123)
+RELEASE:=$(shell echo "1.mos`git -C $3 rev-list --no-merges $4 --count`.git.`git -C $3 rev-parse --short $4`")
+DEB_RELEASE:=$(shell echo "1~u14.04+mos`git -C $3 rev-list --no-merges $4 --count`+git.`git -C $3 rev-parse --short $4`")
+AUTHOR:=$(shell echo `git -C $3 log -1 --pretty=format:%an`)
+EMAIL:=$(shell echo `git -C $3 log -1 --pretty=format:%ae`)
+MSG:=$(shell echo `git -C $3 log -1 --pretty=%s`)
 
-$(BUILD_DIR)/packages/sources/$1/$1.spec: $(BUILD_DIR)/repos/repos.done \
-		$(BUILD_DIR)/packages/sources/$1/version
+$(BUILD_DIR)/packages/sources/$1/$1.spec:	$(BUILD_DIR)/packages/sources/$1/version
 	mkdir -p $(BUILD_DIR)/packages/sources/$1
 	cp -v $(BUILD_DIR)/repos/$1/specs/$1.spec $$(@).tmp
-	sed -i 's/Release:.*$$//Release: $$(RELEASE)/' $$(@).tmp
+#	echo RELEASE=`awk -F= '/^RELEASE=/ {print $$$$NF}' $$<`
+	sed -i 's/Release:.*$$//Release: $$(RELEASE) /' $$(@).tmp
 	mv $$(@).tmp $$(@)
 
 $(BUILD_DIR)/packages/sources/$1/version: $(BUILD_DIR)/repos/repos.done
 	mkdir -p $(BUILD_DIR)/packages/sources/$1
 	echo VERSION=$(PACKAGE_VERSION) > $$(@)
-	echo RELEASE="1.mos`git -C $3 rev-list --no-merges $4 --count`.git.`git -C $3 rev-parse --short $4`" >> $$(@)
-	echo DEB_RELEASE="1~u14.04+mos`git -C $3 rev-list --no-merges $4 --count`+git.`git -C $3 rev-parse --short $4`" >> $$(@)
-	echo AUTHOR=`git -C $3 log -1 --pretty=format:%an` >> $$(@)
-	echo EMAIL=`git -C $3 log -1 --pretty=format:%ae` >> $$(@)
-	echo MSG=`git -C $3 log -1 --pretty=%s` >> $$(@)
+	echo RELEASE=$(RELEASE) >> $$(@)
+	echo DEB_RELEASE=$(DEB_RELEASE) >> $$(@)
+	echo AUTHOR=$(AUTHOR) >> $$(@)
+	echo EMAIL=$(EMAIL) >> $$(@)
+	echo MSG=$(MSG) >> $$(@)
 
 $(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/repos/repos.done
 $(BUILD_DIR)/packages/source_$1.done: $(BUILD_DIR)/packages/sources/$1/$2
-$(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/packages/sources/$1/$1.spec
 $(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/packages/sources/$1/version
+$(BUILD_DIR)/packages/sources/$1/$2: $(BUILD_DIR)/packages/sources/$1/$1.spec
 	cd $3 && git archive --format tar --worktree-attributes $4 > $(BUILD_DIR)/packages/sources/$1/$1.tar
 	cd $(BUILD_DIR)/packages/sources/$1 && tar -rf $1.tar version
 	cd $(BUILD_DIR)/packages/sources/$1 && gzip -9 $1.tar && mv $1.tar.gz $2
