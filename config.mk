@@ -31,9 +31,11 @@ FUEL_AGENT_REPO?=https://github.com/openstack/fuel-agent.git
 FUEL_MAIN_REPO?=https://github.com/openstack/fuel-main.git
 FUEL_NAILGUN_AGENT_REPO?=https://github.com/openstack/fuel-nailgun-agent.git
 FUELLIB_REPO?=https://github.com/openstack/fuel-library.git
+FUELMENU_REPO?=https://github.com/openstack/fuel-menu.git
 NAILGUN_REPO?=https://github.com/openstack/fuel-web.git
 OSTF_REPO?=https://github.com/openstack/fuel-ostf.git
 PYTHON_FUELCLIENT_REPO?=https://github.com/openstack/python-fuelclient.git
+SHOTGUN_REPO?=https://github.com/openstack/shotgun.git
 
 # Gerrit URLs and commits
 ASTUTE_GERRIT_URL?=https://review.openstack.org/openstack/fuel-astute
@@ -42,9 +44,11 @@ FUEL_AGENT_GERRIT_URL?=https://review.openstack.org/openstack/fuel-agent
 FUEL_MAIN_GERRIT_URL?=https://review.openstack.org/openstack/fuel-main
 FUEL_NAILGUN_AGENT_GERRIT_URL?=https://review.openstack.org/openstack/fuel-nailgun-agent
 FUELLIB_GERRIT_URL?=https://review.openstack.org/openstack/fuel-library
+FUELMENU_GERRIT_URL?=https://review.openstack.org/openstack/fuel-menu
 NAILGUN_GERRIT_URL?=https://review.openstack.org/openstack/fuel-web
 OSTF_GERRIT_URL?=https://review.openstack.org/openstack/fuel-ostf
 PYTHON_FUELCLIENT_GERRIT_URL?=https://review.openstack.org/openstack/python-fuelclient
+SHOTGUN_GERRIT_URL?=https://review.openstack.org/openstack/shotgun
 
 ASTUTE_GERRIT_COMMIT?=none
 CREATEMIRROR_GERRIT_COMMIT?=none
@@ -52,6 +56,8 @@ FUEL_AGENT_GERRIT_COMMIT?=none
 FUEL_NAILGUN_AGENT_GERRIT_COMMIT?=none
 FUELLIB_GERRIT_COMMIT?=none
 FUELMAIN_GERRIT_COMMIT?=none
+FUELMENU_GERRIT_COMMIT?=none
 NAILGUN_GERRIT_COMMIT?=none
 OSTF_GERRIT_COMMIT?=none
 PYTHON_FUELCLIENT_GERRIT_COMMIT?=none
+SHOTGUN_GERRIT_COMMIT?=none
