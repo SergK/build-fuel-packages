@@ -15,11 +15,11 @@ fuel_components_repos:=$(fuel_components_repos) $1
 
 $(BUILD_DIR)/repos/$1.done:
 	mkdir -p $(BUILD_DIR)/repos
+	rm -rf $(BUILD_DIR)/repos/$1
 
 # Do not prepare repo in case of no patches provided
 # since we don't need build package for such cases
 ifneq ($5,none)
-	rm -rf $(BUILD_DIR)/repos/$1
 
 	#Clone everything and checkout to branch (or hash)
 	git clone $2 $(BUILD_DIR)/repos/$1 && (cd $(BUILD_DIR)/repos/$1 && git checkout -q $3)
@@ -28,6 +28,8 @@ ifneq ($5,none)
 	$(foreach var,$(filter-out none,$5),
 		( cd $(BUILD_DIR)/repos/$1 && git fetch $4 $(var) && git cherry-pick FETCH_HEAD ) ;
 	)
+else
+	echo "Nothing to do, since patchsets equal 'none'"
 endif
 	touch $$@
 endef
