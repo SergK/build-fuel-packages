@@ -14,8 +14,11 @@ $(BUILD_DIR)/repos/repos.done: $(BUILD_DIR)/repos/$1.done
 fuel_components_repos:=$(fuel_components_repos) $1
 
 $(BUILD_DIR)/repos/$1.done:
-	# Clone repo and checkout required commit
 	mkdir -p $(BUILD_DIR)/repos
+
+# Do not prepare repo in case of no patches provided
+# since we don't need build package for such cases
+ifneq ($5,none)
 	rm -rf $(BUILD_DIR)/repos/$1
 
 	#Clone everything and checkout to branch (or hash)
@@ -25,7 +28,7 @@ $(BUILD_DIR)/repos/$1.done:
 	$(foreach var,$(filter-out none,$5),
 		( cd $(BUILD_DIR)/repos/$1 && git fetch $4 $(var) && git cherry-pick FETCH_HEAD ) ;
 	)
-
+endif
 	touch $$@
 endef
 
@@ -34,7 +37,7 @@ $(eval $(call build_repo,astute,$(ASTUTE_REPO),$(ASTUTE_COMMIT),$(ASTUTE_GERRIT_
 $(eval $(call build_repo,fuel-agent,$(FUEL_AGENT_REPO),$(FUEL_AGENT_COMMIT),$(FUEL_AGENT_GERRIT_URL),$(FUEL_AGENT_GERRIT_COMMIT)))
 $(eval $(call build_repo,fuel-createmirror,$(CREATEMIRROR_REPO),$(CREATEMIRROR_COMMIT),$(CREATEMIRROR_GERRIT_URL),$(CREATEMIRROR_GERRIT_COMMIT)))
 $(eval $(call build_repo,fuel-library$(PRODUCT_VERSION),$(FUELLIB_REPO),$(FUELLIB_COMMIT),$(FUELLIB_GERRIT_URL),$(FUELLIB_GERRIT_COMMIT)))
-$(eval $(call build_repo,fuel-main,$(FUEL_MAIN_REPO),$(FUEL_MAIN_COMMIT),$(FUEL_MAIN_GERRIT_URL),$(FUEL_MAIN_GERRIT_COMMIT)))
+$(eval $(call build_repo,fuel-main,$(FUEL_MAIN_REPO),$(FUEL_MAIN_COMMIT),$(FUEL_MAIN_GERRIT_URL),$(FUELMAIN_GERRIT_COMMIT)))
 $(eval $(call build_repo,fuel-nailgun,$(NAILGUN_REPO),$(NAILGUN_COMMIT),$(NAILGUN_GERRIT_URL),$(NAILGUN_GERRIT_COMMIT)))
 $(eval $(call build_repo,fuel-nailgun-agent,$(FUEL_NAILGUN_AGENT_REPO),$(FUEL_NAILGUN_AGENT_COMMIT),$(FUEL_NAILGUN_AGENT_GERRIT_URL),$(FUEL_NAILGUN_AGENT_GERRIT_COMMIT)))
 $(eval $(call build_repo,fuel-ostf,$(OSTF_REPO),$(OSTF_COMMIT),$(OSTF_GERRIT_URL),$(OSTF_GERRIT_COMMIT)))
