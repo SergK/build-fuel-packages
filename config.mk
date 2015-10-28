@@ -21,9 +21,11 @@ FUEL_AGENT_COMMIT?=master
 FUEL_MAIN?=master
 FUEL_NAILGUN_AGENT_COMMIT?=master
 FUELLIB_COMMIT?=master
+FUELMENU_COMMIT?=master
 NAILGUN_COMMIT?=master
 OSTF_COMMIT?=master
 PYTHON_FUELCLIENT_COMMIT?=master
+SHOTGUN_COMMIT?=master
 
 ASTUTE_REPO?=https://github.com/openstack/fuel-astute.git
 CREATEMIRROR_REPO?=https://github.com/openstack/fuel-mirror.git
