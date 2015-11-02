@@ -50,4 +50,5 @@ $(eval $(call build_repo,python-fuelclient,$(PYTHON_FUELCLIENT_REPO),$(PYTHON_FU
 $(eval $(call build_repo,shotgun,$(SHOTGUN_REPO),$(SHOTGUN_COMMIT),$(SHOTGUN_GERRIT_URL),$(SHOTGUN_GERRIT_COMMIT)))
 
 $(BUILD_DIR)/repos/repos.done:
-	$(ACTION.TOUCH)
+	@mkdir -p $(@D)
+	touch $@
