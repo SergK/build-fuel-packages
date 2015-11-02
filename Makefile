@@ -1,7 +1,7 @@
 .PHONY: all clean help
 
 help:
-	@echo 'all   - prepare all packages sources'
+	@echo 'all   - prepare all packages repos'
 	@echo 'clean - clean targets'
 
 # Path to the sources.
@@ -9,7 +9,7 @@ help:
 SOURCE_DIR?=$(dir $(lastword $(MAKEFILE_LIST)))
 SOURCE_DIR:=$(abspath $(SOURCE_DIR))
 
-all: sources
+all: repos
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -19,7 +19,6 @@ include $(SOURCE_DIR)/config.mk
 
 # Modules
 include $(SOURCE_DIR)/repos.mk
-include $(SOURCE_DIR)/sources.mk
 
 # rules
 define ACTION.TOUCH
